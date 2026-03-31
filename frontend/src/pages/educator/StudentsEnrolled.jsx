@@ -71,12 +71,6 @@ const StudentsEnrolled = () => {
 
                   <td className='px-4 sm:px-6 py-4 sm:py-5'>
                     <div className='flex items-center gap-4'>
-                      <img 
-                        src={item.student.imageUrl} 
-                        alt="student icon" 
-                        className='w-12 h-12 rounded-full object-cover border-2 border-gray-200 shadow-sm'
-                      />
-
                       <span className='font-semibold text-gray-900 text-sm sm:text-base'>
                         {item.student.name}
                       </span>
