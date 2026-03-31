@@ -16,10 +16,22 @@ const PORT= process.env.PORT || 5000;
 const app= express();
 
 // Connect to Database
-connectDB();
+const startServer = async () => {
+    try {
+        // Ensure DB is connected before serving requests.
+        await connectDB();
 
-// Connect to Cloudinary
-connectCloudinary();
+        // Connect to Cloudinary after env and DB are ready.
+        connectCloudinary();
+
+        app.listen(PORT, ()=>{
+            console.log(`Server is running on port ${PORT}`);
+        })
+    } catch (error) {
+        console.error('Server startup failed:', error);
+        process.exit(1);
+    }
+};
 
 //Middlewares
 app.use(cors());
@@ -29,13 +41,11 @@ app.use(express.urlencoded({extended: true}));
 
 //API initialzer
 app.get('/',(req, res)=>{
-    res.status(200).json({message: "Welcome to LSM API"});
+    res.status(200).json({message: "Welcome to Educaso API"});
 })
 app.use('/api', loginRouter);
 app.use('/api/educator', educatorRouter);
 app.use('/api/course', courseRouter);
 app.use('/api/user', userRouter);
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running on port ${PORT}`);
-})
+startServer();

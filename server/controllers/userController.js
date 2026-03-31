@@ -1,4 +1,3 @@
-require('dotenv').config();
 const Stripe= require('stripe');
 const Course= require('../models/Course.js');
 const Purchase = require('../models/Purchase.js');
@@ -100,6 +99,20 @@ const purchaseCourse= async (req, res)=>{
 const verifyStripePayment= async (req, res)=>{
     try{
         const {success, purchaseId}= req.body;
+        const userId = req.userId;
+
+        if (!purchaseId) {
+            return res.status(400).json({ success: false, message: "Missing purchase id" });
+        }
+
+        const purchaseRecord = await Purchase.findById(purchaseId);
+        if (!purchaseRecord) {
+            return res.status(404).json({ success: false, message: "Purchase not found" });
+        }
+
+        if (purchaseRecord.userId.toString() !== userId) {
+            return res.status(403).json({ success: false, message: "Unauthorized purchase verification" });
+        }
 
         if(success === "true"){
             const purchaseData= await Purchase.findByIdAndUpdate(purchaseId,{status: 'completed'});
@@ -124,7 +137,7 @@ const verifyStripePayment= async (req, res)=>{
             return res.status(200).json({success: true, message: "Payment verified and order placed successfully"});
         }else{
             await Purchase.findByIdAndUpdate(purchaseId, {status: 'failed'});
-            return res.status(200).json({success: true, message: "Payment failed, order cancelled"})
+            return res.status(200).json({success: false, message: "Payment failed, order cancelled"})
         }
     }catch(error){
         console.log("Verify Stripe Payment Error: ", error.message);
@@ -170,10 +183,10 @@ const getUserCourseProgress= async (req, res)=>{
 
     try{
         const progressData= await CourseProgress.findOne({userId, courseId});
-        if(!progressData){
-            return res.status(404).json({success: false, message: "Course progress not found"});
-        }
-            return res.status(200).json({success: true, progressData, message: "Course progress fetched successfully"});
+        // if(!progressData){
+        //     return res.status(404).json({success: false, message: "Course progress not found"});
+        // }
+        return res.status(200).json({success: true, progressData, message: "Course progress fetched successfully"});
     }catch(error){
         console.log("Error fetching course progress:", error);
         return res.status(500).json({success: false, message: "Server error fetching course progress"});

@@ -121,6 +121,24 @@ const educatorDashboardData= async (req, res)=>{
     }
 }
 
+const deleteCourse = async(req,res)=>{
+    try {
+        const {CourseId}= req.params;
+        const educator= req.userId;
+        const course= await Course.findOne({_id: CourseId, educator: educator});
+
+        if(!course){
+            return res.status(404).json({success: false, message: "Course not found"});
+        }
+        await course.deleteOne();
+
+        const allCourses= await Course.find({ educator: educator });
+        return res.status(200).json({success: true, message: "Course deleted successfully" , allCourses: allCourses});
+    } catch (error) {
+        return res.status(500).json({success: false, message: "Server error deleting course"});
+    }
+}
+
 // Enrolled Students data with purchase data
 const getEnrolledStudentsData= async (req, res)=>{
     try{
@@ -146,4 +164,4 @@ const getEnrolledStudentsData= async (req, res)=>{
         return res.status(500).json({success: false, message: "Server error getting enrolled students data"});
     }
 }
-module.exports= {updateRoleToEducator, addCourse, getEducatorCourses, educatorDashboardData, getEnrolledStudentsData};
+module.exports= {updateRoleToEducator,   addCourse, getEducatorCourses, educatorDashboardData, getEnrolledStudentsData, deleteCourse};
