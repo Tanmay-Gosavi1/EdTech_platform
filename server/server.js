@@ -9,6 +9,7 @@ const loginRouter= require('./routes/loginRoutes.js');
 const educatorRouter= require('./routes/educatorRoutes.js');
 const courseRouter = require('./routes/courseRoutes.js');
 const userRouter = require('./routes/userRoutes.js');
+const aiRouter = require('./routes/aiRoutes.js');
 
 const PORT= process.env.PORT || 5000;
 
@@ -47,5 +48,6 @@ app.use('/api', loginRouter);
 app.use('/api/educator', educatorRouter);
 app.use('/api/course', courseRouter);
 app.use('/api/user', userRouter);
+app.use('/api/ai', aiRouter);
 
 startServer();
