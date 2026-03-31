@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Routes, useMatch, useLocation } from 'react-router-dom'
 
 import Home from './pages/student/Home.jsx'
@@ -20,6 +20,7 @@ import Navbar from './components/student/Navbar.jsx'
 
 
 import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import "quill/dist/quill.snow.css";
 
@@ -29,9 +30,28 @@ const App = () => {
   const hideNavbarRoutes = ['/login', '/signup']
   const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname)
   const isEducatorRoute = useMatch('/educator/*');
+
+  useEffect(() => {
+    if (location.state?.toast?.message) {
+      const { type, message } = location.state.toast;
+      if (type === 'success') toast.success(message);
+      else if (type === 'info') toast.info(message);
+      else toast.error(message);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   return (
-    <div className='text-default min-h-screen bg-white'>
-      <ToastContainer />
+    <div className='app-shell'>
+      <ToastContainer
+        position="top-right"
+        autoClose={2500}
+        pauseOnHover
+        newestOnTop
+        closeOnClick
+        theme="light"
+        toastClassName="rounded-xl"
+      />
       {!isEducatorRoute && shouldShowNavbar && <Navbar />}
       <Routes>
         <Route path='/' element={<Home />}></Route>

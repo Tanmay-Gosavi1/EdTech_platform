@@ -3,22 +3,17 @@ import {assets} from '../../assets/assets'
 
 const Footer = () => {
   return (
-      <footer className='bg-gray-900 text-gray-300 py-8 sm:py-10'>
+      <footer className='bg-linear-to-br from-slate-950 to-indigo-950 text-gray-300 py-8 sm:py-10'>
         <div className='max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
           <div className='flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8'>
             
             <div className='flex flex-col items-center sm:items-start gap-4'>
-              <img 
-                src={assets.logo_dark} 
-                alt="logo" 
-                className='h-10 sm:h-12'
-                onClick={()=> scrollTo(0,0)}
-              />
+              <h2 className='theme-logo text-3xl text-white cursor-pointer' onClick={()=> scrollTo(0,0)}>Educaso</h2>
 
               <div className='w-full sm:w-64 h-px bg-gray-700'></div>
 
               <p className='text-sm sm:text-base text-gray-400 text-center sm:text-left'>
-                Copyright 2024 Udera. All Right Reserved.
+                Copyright 2024 Educaso. All Right Reserved.
               </p>
             </div>
 

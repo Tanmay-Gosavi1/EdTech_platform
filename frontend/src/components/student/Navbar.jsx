@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { assets } from '../../assets/assets'
 import { Link } from 'react-router-dom'
 import { AppContext } from '../../context/AppContext.jsx'
 import axios from 'axios'
@@ -61,24 +60,22 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="w-full bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+    <nav className="w-full theme-nav sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0">
-            <img 
-              src={assets.logo} 
-              alt="Logo" 
-              className="h-10 sm:h-12 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity duration-200"
-            />
+          <Link to="/" className="shrink-0">
+            <h1>
+              <span className="theme-logo text-3xl">Educaso</span>
+            </h1>
           </Link>
 
           {/* Desktop Navigation - Center */}
           <div className="hidden lg:flex items-center gap-8">
               <Link 
                 to="/course-list" 
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="theme-link"
               >
                 All Courses
               </Link>
@@ -90,13 +87,13 @@ const Navbar = () => {
                     setShowMobileMenu(false)
                     onBecomeEducator()
                   }}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                  className="theme-link"
                 >
                   {isEducator ? "Educator Dashboard" : "Become Educator"}
                 </button>
                 <Link 
                   to="/my-enrollments" 
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                  className="theme-link"
                 >
                   My Enrollments
                 </Link>
@@ -111,7 +108,7 @@ const Navbar = () => {
                 {/* User Avatar */}
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-linear-to-br from-violet-500 to-sky-500 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-2"
                   aria-label="User menu"
                   aria-expanded={showDropdown}
                 >
@@ -130,7 +127,7 @@ const Navbar = () => {
                 
                 {/* Dropdown Menu */}
                 {showDropdown && (
-                  <div className="absolute right-0 mt-3 w-52 bg-white rounded-xl shadow-xl border border-gray-200 py-2">
+                  <div className="absolute right-0 mt-3 w-56 theme-surface py-2">
                     <div className="px-4 py-3 border-b border-gray-200">
                       <p className="text-sm font-semibold text-gray-800">
                         {user.name || user.firstName}
@@ -140,9 +137,9 @@ const Navbar = () => {
                     
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center gap-3 group"
+                      className="w-full text-left px-4 py-3 text-rose-600 hover:bg-rose-50 transition-colors duration-200 flex items-center gap-3 group"
                     >
-                      <span className="text-lg">🚪</span>
+                      <span className="text-lg">⇥</span>
                       <span className="font-medium">Logout</span>
                     </button>
                   </div>
@@ -151,7 +148,7 @@ const Navbar = () => {
             ) : (
               <button
                 onClick={() => navigate('/signup')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                className="theme-btn-primary px-6 py-2.5 rounded-full"
               >
                 Create Account
               </button>
@@ -161,7 +158,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-sky-50 transition-colors"
             aria-label="Toggle menu"
           >
             <svg 
@@ -191,11 +188,11 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {showMobileMenu && (
-          <div className="lg:hidden border-t border-gray-200 py-4 space-y-3">
+          <div className="lg:hidden border-t border-slate-200 py-4 space-y-3">
               <Link 
                 to="/course-list" 
                 onClick={() => setShowMobileMenu(false)}
-                className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
+                className="block px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-lg transition-colors duration-200"
               >
                 All Courses
               </Link>
@@ -207,7 +204,7 @@ const Navbar = () => {
                     setShowMobileMenu(false)
                     onBecomeEducator()
                   }}
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
+                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-lg transition-colors duration-200"
                 >
                   {isEducator ? "Educator Dashboard" : "Become Educator"}
                 </button>
@@ -215,7 +212,7 @@ const Navbar = () => {
                 <Link 
                   to="/my-enrollments" 
                   onClick={() => setShowMobileMenu(false)}
-                  className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
+                  className="block px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-lg transition-colors duration-200"
                 >
                   My Enrollments
                 </Link>
@@ -238,7 +235,7 @@ const Navbar = () => {
                     setShowMobileMenu(false)
                     navigate('/signup')
                   }}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                  className="w-full theme-btn-primary px-6 py-2.5 rounded-full"
                 >
                   Create Account
                 </button>

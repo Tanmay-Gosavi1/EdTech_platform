@@ -1,15 +1,17 @@
 import React from 'react'
-import { assets } from '../../assets/assets'
+// import { assets } from '../../assets/assets'
 import { Link } from 'react-router-dom'
  
 const Footer = () => {
   return (
-    <footer className='bg-gray-900 text-gray-300'>
+    <footer className='bg-linear-to-br from-slate-950 to-indigo-950 text-slate-300'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12'>
             <div className='space-y-3 sm:space-y-4 lg:space-y-5'>
-                <img src={assets.logo_dark} alt="Logo" className='h-10 sm:h-11 lg:h-12 mb-3 sm:mb-4 lg:mb-6'/>
+                <h1>
+                    <span className="theme-logo text-3xl text-white">Educaso</span>
+                </h1>
                 <p className='text-sm sm:text-sm lg:text-base leading-relaxed text-gray-400 pr-0 lg:pr-4'>
-                    Lorem Ipsum is simply dummy mtext of the printing and typesettng industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                    Learn through project-first pathways with modern curriculum and community-backed momentum.
                 </p>
             </div>
             <div className='space-y-3 sm:space-y-4 lg:space-y-5'>
@@ -26,12 +28,12 @@ const Footer = () => {
                 <p className='text-sm sm:text-sm lg:text-base text-gray-400 mb-3 sm:mb-4 lg:mb-5'>The latest news, articles, and resources , sent to your inbox weekly.</p>
                 <div className='flex flex-col sm:flex-row gap-3'>
                     <input type="text" placeholder="Enter your email" className='flex-1 px-3 sm:px-4 py-2 sm:py-2 lg:py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors duration-200 text-sm sm:text-sm lg:text-base'/>
-                    <button className='bg-blue-600 text-white font-semibold px-6 sm:px-6 lg:px-7 py-2 sm:py-2 lg:py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 whitespace-nowrap text-sm sm:text-sm lg:text-base'>Subscribe</button>
+                    <button className='theme-btn-primary px-6 sm:px-6 lg:px-7 py-2 sm:py-2 lg:py-3 whitespace-nowrap text-sm sm:text-sm lg:text-base'>Subscribe</button>
                 </div>
             </div>
         </div>
         <div className='border-t border-gray-800'>
-            <p className='text-center text-sm sm:text-sm lg:text-base text-gray-500 py-6 sm:py-7 lg:py-8 px-4'>Copyright 2024 © Udera. All Right Reserved.</p>
+            <p className='text-center text-sm sm:text-sm lg:text-base text-gray-500 py-6 sm:py-7 lg:py-8 px-4'>Copyright 2024 © Educaso. All Right Reserved.</p>
         </div>
     </footer>
   )

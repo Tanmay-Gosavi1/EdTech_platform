@@ -8,7 +8,7 @@ import Footer from '../../components/student/Footer.jsx'
 
 export const Home = () => {
   return (
-    <div className=''>
+    <div className='landing-page'>
       <Hero />
       <Companies />
       <CoursesSection />
