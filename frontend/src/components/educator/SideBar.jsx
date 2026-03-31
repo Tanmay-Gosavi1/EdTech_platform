@@ -4,7 +4,7 @@ import {AppContext} from '../../context/AppContext.jsx'
 import {useContext} from 'react'
 import { NavLink } from 'react-router-dom'
 
-const SideBar = () => {
+const SideBar = ({ isOpen, onClose }) => {
 
   const {isEducator}= useContext(AppContext);
   
@@ -16,36 +16,49 @@ const SideBar = () => {
   ]
 
   return isEducator && (
-    <div className='min-h-screen bg-white border-r border-gray-200 w-64 lg:w-72 py-8 px-4 sm:px-6 shadow-sm'>
-      <div className='space-y-3'>
+    <>
+      <div
+        onClick={onClose}
+        className={`md:hidden fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-30 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      ></div>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 md:z-auto bg-white/95 backdrop-blur border-r border-sky-100 w-72 py-6 px-4 sm:px-5 shadow-xl md:shadow-sm transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      <div className='space-y-2'>
+        <div className='md:hidden flex items-center justify-between mb-3 px-2'>
+          <p className='text-sm font-semibold text-slate-500 uppercase tracking-wider'>Educator Menu</p>
+          <button type='button' onClick={onClose} className='w-8 h-8 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50'>
+            x
+          </button>
+        </div>
         {
           menuItems.map((item, index)=>(
             <NavLink 
               to={item.path} 
               key={index} 
               end={item.path === '/educator'}
+              onClick={onClose}
               className={({isActive}) => `
-                flex items-center gap-4 px-5 py-4 rounded-xl transition-all duration-300
+                flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
                 ${isActive 
-                  ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600 shadow-sm font-semibold' 
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600 border-l-4 border-transparent'
+                  ? 'bg-linear-to-r from-sky-50 to-violet-50 text-sky-700 border border-sky-100 shadow-sm font-semibold' 
+                  : 'text-slate-700 hover:bg-slate-50 hover:text-sky-700 border border-transparent'
                 }
               `}
             >
               <img 
                 src={item.icon} 
                 alt={item.name} 
-                className='w-6 h-6 sm:w-7 sm:h-7'
+                className='w-5 h-5 sm:w-6 sm:h-6'
               />
 
-              <p className='text-base sm:text-lg font-medium'>
+              <p className='text-sm sm:text-base font-medium'>
                 {item.name}
               </p>
             </NavLink>
           ))
         }
       </div>
-    </div>
+      </aside>
+    </>
   )
 }
 

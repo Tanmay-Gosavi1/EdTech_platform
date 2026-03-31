@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import {AppContext} from '../../context/AppContext.jsx'
 import Loading from '../../components/student/Loading.jsx';
 import { assets } from '../../assets/assets';
-import humanizeDuration from 'humanize-duration';
 import Footer from '../../components/student/Footer.jsx';
 import Youtube from 'react-youtube';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { getYoutubeVideoId } from '../../utils/youtube.js';
 
 const CourseDetails = () => {
 
@@ -15,13 +15,14 @@ const CourseDetails = () => {
 
   const [courseData, setCourseData]= useState(null);
 
-  const {allCourses, calculateRating, calculateChapterTime, calculateCourseDuration, calculateNumberOfLectures, currency, backendUrl, user, token, isAlreadyEnrolled, setIsAlreadyEnrolled }= useContext(AppContext);
+  const {calculateRating, calculateChapterTime, calculateCourseDuration, calculateNumberOfLectures, formatCurrency, formatDuration, backendUrl, user, token, isAlreadyEnrolled }= useContext(AppContext);
 
   const [openSections, setOpenSections]= useState({});
 
   const [playerData, setPlayerData]= useState(null);
+  const [isEnrolling, setIsEnrolling] = useState(false);
 
-  const fetchCourseData= async ()=>{
+  const fetchCourseData= useCallback(async ()=>{
     try{
       const response= await axios.get(backendUrl + '/api/course/' + id);
       if(response.data.success){
@@ -33,13 +34,16 @@ const CourseDetails = () => {
       console.log("Error fetching course data:", error);
       toast.error(error.message);
     }
-  }
+  }, [backendUrl, id])
 
   useEffect(()=>{
     fetchCourseData();
-  });
+  }, [fetchCourseData]);
 
   const enrollCourse= async ()=>{
+    if (isEnrolling) {
+      return;
+    }
     if(!user){
       return toast.info("Please login to enroll in the course");
     }
@@ -47,6 +51,7 @@ const CourseDetails = () => {
       return toast.info("You are already enrolled in this course");
     }
     try{
+      setIsEnrolling(true);
       const response= await axios.post(backendUrl + '/api/user/purchase',{
         courseId: courseData._id
       },{
@@ -63,6 +68,8 @@ const CourseDetails = () => {
     }catch(error){
       console.log("Error while purchasing the course", error.message);
       toast.error(error.message);
+    } finally {
+      setIsEnrolling(false);
     }
   }
 
@@ -73,6 +80,17 @@ const CourseDetails = () => {
       }
     ))
   }
+
+  const handlePreviewClick = (lectureUrl) => {
+    const videoId = getYoutubeVideoId(lectureUrl);
+
+    if (!videoId) {
+      toast.error('Invalid YouTube URL for this preview lecture.');
+      return;
+    }
+
+    setPlayerData({ videoId });
+  };
 
   return  courseData ? (
     <>
@@ -135,13 +153,13 @@ const CourseDetails = () => {
                                         <div className='flex-1 min-w-0'>
                                           <p className='font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base'>{lecture.lectureTitle}</p>
                                           <div className='flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 flex-wrap'>
-                                              {lecture.isPreviewFree && <p onClick={() => setPlayerData({videoId: lecture.lectureUrl.split('/').pop()})} className='bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-full font-semibold text-xs hover:bg-green-200 transition-colors'>Preview</p>}
+                                              {lecture.isPreviewFree && <p onClick={() => handlePreviewClick(lecture.lectureUrl)} className='bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-full font-semibold text-xs hover:bg-green-200 transition-colors'>Preview</p>}
                                               <p className='hidden'>{lecture.lectureDuration}</p>
                                               <p className='flex items-center gap-1 sm:gap-1.5'>
                                                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                {humanizeDuration(lecture.lectureDuration*60*1000, {units: ["h","m"]})}
+                                                {formatDuration(lecture.lectureDuration)}
                                               </p>
                                             </div>
                                         </div>
@@ -211,8 +229,8 @@ const CourseDetails = () => {
                   </div>
                   <div className='space-y-2'>
                     <div className='flex items-baseline gap-2 sm:gap-3 flex-wrap'>
-                      <p className='text-3xl sm:text-4xl font-bold text-gray-900'>{currency}{(courseData.coursePrice - courseData.discount*courseData.coursePrice/100).toFixed(2)}</p>
-                      <p className='text-lg sm:text-xl text-gray-400 line-through'>{currency}{courseData.coursePrice.toFixed(2)}</p>
+                      <p className='text-3xl sm:text-4xl font-bold text-gray-900'>{formatCurrency(courseData.coursePrice - courseData.discount*courseData.coursePrice/100)}</p>
+                      <p className='text-lg sm:text-xl text-gray-400 line-through'>{formatCurrency(courseData.coursePrice)}</p>
                     </div>
                     <div className='inline-flex items-center gap-2'>
                       <p className='bg-green-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-md'>{courseData.discount}% OFF</p>
@@ -238,8 +256,14 @@ const CourseDetails = () => {
                       <p className='text-xs sm:text-sm font-semibold text-gray-700'>{calculateNumberOfLectures(courseData)}</p>
                     </div>
                   </div>
-
-                  <button onClick={enrollCourse} className='w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base'>{isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}</button>
+                  {/* onClick={enrollCourse} */}
+                  <button
+                    onClick={enrollCourse}
+                    disabled={isAlreadyEnrolled || isEnrolling}
+                    className={`w-full text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all duration-300 shadow-lg text-sm sm:text-base ${isAlreadyEnrolled || isEnrolling ? 'bg-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:-translate-y-0.5'}`}
+                  >
+                    {isAlreadyEnrolled ? "Already Enrolled" : isEnrolling ? 'Redirecting to payment...' : "Enroll Now"}
+                  </button>
 
                   <div className='bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg sm:rounded-xl p-4 sm:p-5 border border-gray-200'>
                     <p className='font-bold text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg'>What's included:</p>

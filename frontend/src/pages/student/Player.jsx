@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {AppContext} from '../../context/AppContext.jsx'
 import {assets} from '../../assets/assets.js'
-import humanizeDuration from 'humanize-duration'
 import {useParams} from 'react-router-dom'
 import Youtube from 'react-youtube';
 import Footer from '../../components/student/Footer.jsx';
@@ -9,10 +8,11 @@ import Rating from '../../components/student/Rating.jsx';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading.jsx';
+import { getYoutubeVideoId } from '../../utils/youtube.js';
 
 const Player = () => {
 
-  const { enrolledCourses, calculateChapterTime, backendUrl, token, user, fetchUserEnrolledCourses, navigate}= useContext(AppContext);
+  const { enrolledCourses, calculateChapterTime, formatDuration, backendUrl, token, user, fetchUserEnrolledCourses, navigate}= useContext(AppContext);
 
   const {courseId}= useParams();
   const [courseData, setCourseData]= useState(null);
@@ -20,6 +20,7 @@ const Player = () => {
   const [playerData, setPlayerData]= useState(null);
   const [progressData, setProgressData]= useState(null);
   const [initialRating, setInitialRating]= useState(localStorage.getItem('initialRating') || 0);
+  const videoId = getYoutubeVideoId(playerData?.lectureUrl);
 
 
   const getCourseData = async ()=>{
@@ -62,10 +63,12 @@ const Player = () => {
       if(response.data.success){
         setProgressData(response.data.progressData);
       }else{
-        toast.error(response.data.message);
+        // toast.error(response.data.message);
+        console.log(response.data.message);
       }
     }catch(error){
-      toast.error(error.message);
+      // toast.error(error.message);
+      console.log("Error fetching course progress:", error);
     }
   }
 
@@ -191,7 +194,7 @@ const Player = () => {
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" 
                                           />
                                         </svg>
-                                        {humanizeDuration(lecture.lectureDuration*60*1000, {units: ["h","m"]})}
+                                        {formatDuration(lecture.lectureDuration)}
                                       </p>
                                     </div>
                                   </div>
@@ -220,8 +223,9 @@ const Player = () => {
               {playerData ? (
                 <div className='space-y-4'>
                   <div className='relative w-full'>
-                    <Youtube 
-                      videoId={playerData.lectureUrl.split('/').pop()} 
+                    {videoId ? (
+                      <Youtube 
+                      videoId={videoId} 
                       opts={{
                         width: '100%',
                         height: '100%',
@@ -232,6 +236,11 @@ const Player = () => {
                       className='w-full aspect-video'
                       iframeClassName='w-full h-full' 
                     />
+                    ) : (
+                      <div className='w-full aspect-video flex items-center justify-center bg-slate-100 text-slate-600 text-sm font-medium px-4 text-center'>
+                        This lecture has an invalid YouTube URL. Please update it from educator panel.
+                      </div>
+                    )}
                   </div>
                   <div className="flex justify-end px-6">
                     <button

@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 
 const CourseCard = ({course}) => {
 
-    const {currency, calculateRating, user }= useContext(AppContext);
+    const { formatCurrency, calculateRating, user }= useContext(AppContext);
   return (
-    <Link to={'/course/' + course._id} className="block bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group" onClick={()=> scrollTo(0,0)}>
+    <Link to={'/course/' + course._id} className="block theme-surface overflow-hidden group transition-transform duration-200 hover:-translate-y-1" onClick={()=> scrollTo(0,0)}>
         <img src={course.courseThumbnail} alt="Course Image" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
         <div className="p-4 space-y-3">
-            <h3 className="text-lg font-semibold text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">{course.courseTitle}</h3>
-            <p className="text-sm text-gray-600 font-medium">{course.educator.name}</p>
+            <h3 className="text-lg font-semibold text-slate-800 line-clamp-2 group-hover:text-sky-700 transition-colors duration-200">{course.courseTitle}</h3>
+            <p className="text-sm text-slate-600 font-medium">{course.educator.name}</p>
             <div className="flex items-center gap-2">
-                <p className="text-sm font-bold text-gray-800">{calculateRating(course)}</p>
+                <p className="text-sm font-bold text-slate-800">{calculateRating(course)}</p>
                 <div className="flex items-center gap-0.5">
                     {
                         [...Array(5)].map((_,i)=>(
@@ -21,9 +21,9 @@ const CourseCard = ({course}) => {
                         ))
                     }
                 </div>
-                <p className="text-sm text-gray-500">({course.courseRatings.length})</p>
+                                <p className="text-sm text-slate-500">({course.courseRatings.length})</p>
             </div>
-            <p className="text-xl font-bold text-gray-900">{currency}{(course.coursePrice - course.discount*course.coursePrice/100).toFixed(2)}</p>
+                        <p className="text-xl font-bold text-indigo-900">{formatCurrency(course.coursePrice - course.discount*course.coursePrice/100)}</p>
         </div>
     </Link>
   )

@@ -8,9 +8,10 @@ const CoursesSection = () => {
 
     const { allCourses } = useContext(AppContext);
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">Learn from the best</h2>
-        <p className="text-gray-600 text-center text-base md:text-lg max-w-3xl mx-auto mb-12">Discover our top-rated courses across various categories. From coding and design to business and wellness, our courses are crafted to deliver results.</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+                <p className='text-center text-slate-600 font-semibold tracking-[0.2em] uppercase text-xs sm:text-sm mb-3'>Featured Tracks</p>
+                <h2 className="headline-font text-3xl md:text-5xl font-extrabold text-slate-900 text-center mb-4">Learn from creators who build</h2>
+                <p className="text-slate-600 text-center text-base md:text-lg max-w-3xl mx-auto mb-12">Explore high-impact courses across engineering, design, data, and business with practical outcomes and portfolio-ready projects.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {
@@ -19,8 +20,8 @@ const CoursesSection = () => {
                 ))
             }
         </div>
-        <Link to={'/course-list'} onClick={()=> scrollTo(0,0)}
-        className="block w-fit mx-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">Explore Courses</Link>
+                <Link to={'/course-list'} onClick={()=> scrollTo(0,0)}
+                                className="block w-fit mx-auto theme-btn-primary px-8 py-3 rounded-full">Explore All Courses</Link>
     </div>
   )
 }

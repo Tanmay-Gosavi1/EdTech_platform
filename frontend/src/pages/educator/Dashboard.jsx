@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext';
-import { dummyDashboardData, assets } from '../../assets/assets';
+import { assets } from '../../assets/assets';
 import Loading from '../../components/student/Loading.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Dashboard = () => {
 
-  const { currency, backendUrl, token, isEducator }= useContext(AppContext);
+  const { formatCurrency, backendUrl, token, isEducator }= useContext(AppContext);
   const [dashboardData, setDashboardData] = useState(null);
 
   const fetchDashboardData= async ()=>{
@@ -32,14 +32,18 @@ const Dashboard = () => {
   },[isEducator]);
 
   return dashboardData ? (
-    <div className='min-h-screen bg-gray-50 py-10 sm:py-12 lg:py-16'>
-      <div className='max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
+    <div className='min-h-screen bg-slate-50 py-6 sm:py-8 lg:py-10'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-10'>
+        <div className='mb-6 sm:mb-8'>
+          <h1 className='text-2xl sm:text-3xl font-bold text-slate-900'>Educator Dashboard</h1>
+          <p className='text-sm sm:text-base text-slate-600 mt-1'>Track enrollments, courses, and revenue at a glance.</p>
+        </div>
         
         {/* Stats Cards */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10'>
           
-          <div className='bg-white rounded-xl shadow-md border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300'>
-            <div className='flex items-center gap-5'>
+          <div className='bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-300'>
+            <div className='flex items-center gap-4'>
               <img 
                 src={assets.patients_icon} 
                 alt="patients_icon" 
@@ -47,19 +51,19 @@ const Dashboard = () => {
               />
 
               <div>
-                <p className='text-3xl sm:text-4xl font-bold text-gray-900 mb-1'>
+                <p className='text-2xl sm:text-3xl font-bold text-slate-900 mb-1'>
                   {dashboardData.enrolledStudentsData.length}
                 </p>
 
-                <p className='text-sm sm:text-base text-gray-600 font-medium'>
+                <p className='text-sm sm:text-base text-slate-600 font-medium'>
                   Total Enrollments
                 </p>
               </div>
             </div>
           </div>
 
-          <div className='bg-white rounded-xl shadow-md border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300'>
-            <div className='flex items-center gap-5'>
+          <div className='bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-300'>
+            <div className='flex items-center gap-4'>
               <img 
                 src={assets.appointments_icon} 
                 alt="courses_icon" 
@@ -67,19 +71,19 @@ const Dashboard = () => {
               />
 
               <div>
-                <p className='text-3xl sm:text-4xl font-bold text-gray-900 mb-1'>
+                <p className='text-2xl sm:text-3xl font-bold text-slate-900 mb-1'>
                   {dashboardData.totalCourses}
                 </p>
 
-                <p className='text-sm sm:text-base text-gray-600 font-medium'>
+                <p className='text-sm sm:text-base text-slate-600 font-medium'>
                   Total Courses
                 </p>
               </div>
             </div>
           </div>
 
-          <div className='bg-white rounded-xl shadow-md border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300'>
-            <div className='flex items-center gap-5'>
+          <div className='bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-300'>
+            <div className='flex items-center gap-4'>
               <img 
                 src={assets.earning_icon} 
                 alt="earning_icon" 
@@ -87,11 +91,11 @@ const Dashboard = () => {
               />
 
               <div>
-                <p className='text-3xl sm:text-4xl font-bold text-gray-900 mb-1'>
-                  {currency}{dashboardData.totalEarning}
+                <p className='text-2xl sm:text-3xl font-bold text-slate-900 mb-1'>
+                  {formatCurrency(dashboardData.totalEarning/100)}
                 </p>
 
-                <p className='text-sm sm:text-base text-gray-600 font-medium'>
+                <p className='text-sm sm:text-base text-slate-600 font-medium'>
                   Total Earnings
                 </p>
               </div>
@@ -102,9 +106,9 @@ const Dashboard = () => {
 
 
         {/* Latest Enrollments Table */}
-        <div className='bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden'>
-          <div className='bg-gradient-to-r from-blue-50 to-indigo-50 p-6 sm:p-8 border-b border-gray-200'>
-            <h2 className='text-2xl sm:text-3xl font-bold text-gray-900'>
+        <div className='bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden'>
+          <div className='bg-linear-to-r from-sky-50 to-cyan-50 p-4 sm:p-6 border-b border-slate-200'>
+            <h2 className='text-xl sm:text-2xl font-bold text-slate-900'>
               Latest Enrollments
             </h2>
           </div>

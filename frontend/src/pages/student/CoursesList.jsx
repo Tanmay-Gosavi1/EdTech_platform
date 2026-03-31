@@ -7,7 +7,7 @@ import CourseCard from '../../components/student/CourseCard';
 import {assets} from '../../assets/assets'
 import Footer from '../../components/student/Footer.jsx';
 
-const coursesList = () => {
+const CoursesList = () => {
   const {navigate, allCourses }= useContext(AppContext);
 
   const {input}= useParams();
@@ -28,13 +28,13 @@ const coursesList = () => {
 
   return (
     <>  
-      <div className='min-h-screen bg-gray-50'>
-        <div className='bg-white shadow-sm border-b border-gray-200 py-8 px-4 sm:px-6 lg:px-8'>
+      <div className='min-h-screen'>
+        <div className='theme-surface-soft py-8 px-4 sm:px-6 lg:px-8'>
           <div className='max-w-7xl mx-auto flex items-center justify-between gap-8'>
-            <div className='flex-shrink-0'>
-              <h1 className='text-3xl sm:text-4xl font-bold text-gray-900 mb-3'>Course List</h1>
-              <p className='text-sm text-gray-600'>
-                <span onClick={()=> navigate('/')} className='hover:text-blue-600 cursor-pointer transition-colors duration-200'>Home</span> / <span className='text-gray-900 font-medium'>Course List</span>
+            <div className='shrink-0'>
+              <h1 className='theme-section-title text-3xl sm:text-4xl font-bold mb-3'>Course List</h1>
+              <p className='text-sm text-slate-600'>
+                <span onClick={()=> navigate('/')} className='hover:text-sky-600 cursor-pointer transition-colors duration-200'>Home</span> / <span className='text-slate-900 font-medium'>Course List</span>
               </p>
             </div>
             <div className='flex-1 max-w-2xl'>
@@ -44,7 +44,7 @@ const coursesList = () => {
         </div>
 
         {
-          input && <div className='inline-flex items-center gap-4 px-4 py-2 -mb-8 text-gray-600'>
+          input && <div className='inline-flex items-center gap-4 px-4 py-2 -mb-8 text-slate-600'>
             <p>{input}</p>
             <img src={assets.cross_icon} alt="" className='cursor-pointer' onClick={()=> navigate('/course-list')}/>
           </div>
@@ -65,4 +65,4 @@ const coursesList = () => {
   )
 }
 
-export default coursesList
+export default CoursesList
