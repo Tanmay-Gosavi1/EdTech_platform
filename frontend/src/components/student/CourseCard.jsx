@@ -21,9 +21,12 @@ const CourseCard = ({course}) => {
                         ))
                     }
                 </div>
-                                <p className="text-sm text-slate-500">({course.courseRatings.length})</p>
-            </div>
-                        <p className="text-xl font-bold text-indigo-900">{formatCurrency(course.coursePrice - course.discount*course.coursePrice/100)}</p>
+                    <p className="text-sm text-slate-500">({course.courseRatings.length})</p>
+                </div>
+                {/* <div>
+                    <h1 className='block text-xs'>{course.enrolledStudents?.length || 5}+ Students Enrolled </h1>
+                </div> */}
+                <p className="text-xl font-bold text-indigo-900">{formatCurrency(course.coursePrice - course.discount*course.coursePrice/100)}</p>
         </div>
     </Link>
   )

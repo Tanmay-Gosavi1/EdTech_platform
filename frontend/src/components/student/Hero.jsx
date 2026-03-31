@@ -24,7 +24,8 @@ const Hero = () => {
             <h1 className='headline-font text-slate-950 text-4xl sm:text-5xl md:text-6xl lg:text-[78px] leading-[0.98] font-extrabold tracking-tight max-w-4xl'>
               Build your
               <span className='mx-2 sm:mx-3 text-violet-700 inline-flex items-center justify-center rounded-full h-13 w-13 sm:h-16 sm:w-16 border-4 border-lime-300 bg-violet-600 shadow-lg'>
-                <img src={assets.logo_dark} alt='logo icon' className='w-7 sm:w-8 invert'/>
+                {/* <img src={assets.logo_dark} alt='logo icon' className='w-7 sm:w-8 invert'/> */}
+                <h1 className='text-[8px] text-black  tracking-wide'>Educaso</h1>
               </span>
               dream career with
               <span className='block mt-2 sm:mt-3'>

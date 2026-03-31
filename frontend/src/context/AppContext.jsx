@@ -10,7 +10,7 @@ export const AppContext= createContext();
 
 export const AppContextProvider = (props) => {
 
-    const currencyCode = (import.meta.env.VITE_CURRENCY || 'USD').replace(/['"]/g, '').trim().toUpperCase();
+    const currencyCode = (import.meta.env.VITE_CURRENCY || 'INR').replace(/['"]/g, '').trim().toUpperCase();
 
     const formatCurrency = (amount) => {
       const value = Number(amount);
@@ -29,8 +29,6 @@ export const AppContextProvider = (props) => {
     const [loading, setLoading] = useState(true)
     const [token, setToken] = useState(localStorage.getItem('token') || null)
     const [login, setLogin]= useState(false);
-
-    const [isAlreadyEnrolled, setIsAlreadyEnrolled]= useState(false);
 
     const backendUrl= import.meta.env.VITE_BACKEND_URL;
 
@@ -91,6 +89,7 @@ export const AppContextProvider = (props) => {
     localStorage.removeItem('token')
     setToken(null)
     setUser(null)
+    setEnrolledCourses([])
     navigate('/')
   }
     // Fetch All Courses
@@ -183,7 +182,9 @@ export const AppContextProvider = (props) => {
 
     useEffect(()=>{
       if(token){
-      fetchUserEnrolledCourses();
+        fetchUserEnrolledCourses();
+      } else {
+        setEnrolledCourses([]);
       }
     },[token])
 
@@ -192,7 +193,6 @@ export const AppContextProvider = (props) => {
         setLogin,
         user,
         setUser,
-        isAlreadyEnrolled, setIsAlreadyEnrolled,
         loading,
         setLoading,
         token,

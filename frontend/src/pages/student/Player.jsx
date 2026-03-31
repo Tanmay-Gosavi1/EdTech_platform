@@ -9,6 +9,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading.jsx';
 import { getYoutubeVideoId } from '../../utils/youtube.js';
+import AiChat from '../../components/student/AiChat.jsx';
 
 const Player = () => {
 
@@ -272,7 +273,13 @@ const Player = () => {
             </div>
           </div>
 
+          {/* Ai chat Div */}
+          <div className='lg:col-span-3'>
+            <AiChat courseId={courseId} />
+          </div>
+
         </div>
+        
       </div>
 
       <Footer />

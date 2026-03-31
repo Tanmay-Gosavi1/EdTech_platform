@@ -6,7 +6,7 @@ import {AppContext} from '../../context/AppContext.jsx'
 
 const VerifyPayment = () => {
 
-    const {navigate, backendUrl, token, setIsAlreadyEnrolled, fetchUserEnrolledCourses} = useContext(AppContext);
+    const {navigate, backendUrl, token, fetchUserEnrolledCourses} = useContext(AppContext);
     const [searchParams]= useSearchParams();
     const hasVerifiedRef = useRef(false);
 
@@ -20,7 +20,6 @@ const VerifyPayment = () => {
             })
             if(response.data.success){
                 if(success === 'true'){
-                    setIsAlreadyEnrolled(true);
                     await fetchUserEnrolledCourses();
                     navigate('/my-enrollments', {
                         replace: true,
@@ -44,7 +43,7 @@ const VerifyPayment = () => {
                 state: { toast: { type: 'error', message: error.response?.data?.message || error.message } },
             });
         }
-    }, [backendUrl, fetchUserEnrolledCourses, navigate, purchaseId, setIsAlreadyEnrolled, success, token])
+    }, [backendUrl, fetchUserEnrolledCourses, navigate, purchaseId, success, token])
 
     useEffect(()=>{
         if(!purchaseId){

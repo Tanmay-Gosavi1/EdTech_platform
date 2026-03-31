@@ -15,12 +15,18 @@ const CourseDetails = () => {
 
   const [courseData, setCourseData]= useState(null);
 
-  const {calculateRating, calculateChapterTime, calculateCourseDuration, calculateNumberOfLectures, formatCurrency, formatDuration, backendUrl, user, token, isAlreadyEnrolled }= useContext(AppContext);
+  const {calculateRating, calculateChapterTime, calculateCourseDuration, calculateNumberOfLectures, formatCurrency, formatDuration, backendUrl, user, token, enrolledCourses, fetchUserEnrolledCourses }= useContext(AppContext);
 
   const [openSections, setOpenSections]= useState({});
 
   const [playerData, setPlayerData]= useState(null);
   const [isEnrolling, setIsEnrolling] = useState(false);
+
+  const isCourseAlreadyEnrolled = !!(
+    user &&
+    courseData &&
+    enrolledCourses.some((course) => String(course._id) === String(courseData._id))
+  );
 
   const fetchCourseData= useCallback(async ()=>{
     try{
@@ -47,7 +53,7 @@ const CourseDetails = () => {
     if(!user){
       return toast.info("Please login to enroll in the course");
     }
-    if(isAlreadyEnrolled){
+    if(isCourseAlreadyEnrolled){
       return toast.info("You are already enrolled in this course");
     }
     try{
@@ -66,8 +72,13 @@ const CourseDetails = () => {
         toast.error(response.data.message);
       }
     }catch(error){
-      console.log("Error while purchasing the course", error.message);
-      toast.error(error.message);
+      const apiMessage = error.response?.data?.message || error.message;
+      if (apiMessage === 'Course already purchased') {
+        await fetchUserEnrolledCourses();
+        toast.info('You are already enrolled in this course');
+      } else {
+        toast.error(apiMessage);
+      }
     } finally {
       setIsEnrolling(false);
     }
@@ -259,10 +270,10 @@ const CourseDetails = () => {
                   {/* onClick={enrollCourse} */}
                   <button
                     onClick={enrollCourse}
-                    disabled={isAlreadyEnrolled || isEnrolling}
-                    className={`w-full text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all duration-300 shadow-lg text-sm sm:text-base ${isAlreadyEnrolled || isEnrolling ? 'bg-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:-translate-y-0.5'}`}
+                    disabled={isCourseAlreadyEnrolled || isEnrolling}
+                    className={`w-full text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all duration-300 shadow-lg text-sm sm:text-base ${isCourseAlreadyEnrolled || isEnrolling ? 'bg-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:-translate-y-0.5'}`}
                   >
-                    {isAlreadyEnrolled ? "Already Enrolled" : isEnrolling ? 'Redirecting to payment...' : "Enroll Now"}
+                    {isCourseAlreadyEnrolled ? "Already Enrolled" : isEnrolling ? 'Redirecting to payment...' : "Enroll Now"}
                   </button>
 
                   <div className='bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg sm:rounded-xl p-4 sm:p-5 border border-gray-200'>
