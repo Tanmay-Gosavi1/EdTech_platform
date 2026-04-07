@@ -49,5 +49,8 @@ app.use('/api/educator', educatorRouter);
 app.use('/api/course', courseRouter);
 app.use('/api/user', userRouter);
 app.use('/api/ai', aiRouter);
+app.use('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
 startServer();

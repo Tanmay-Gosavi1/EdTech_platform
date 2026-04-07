@@ -24,9 +24,9 @@ const AiChat = ({ courseId }) => {
 
   const chatEndRef = useRef(null);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  // useEffect(() => {
+  //   chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages, loading]);
 
   // ✅ Copy function
   const copyToClipboard = async (value) => {
