@@ -68,6 +68,7 @@ const App = () => {
           <Route path='my-courses' element={<MyCourse />}></Route>
           <Route path='students-enrolled' element={<StudentsEnrolled />}></Route>
           <Route path='add-course' element={<AddCourse />}></Route>
+          <Route path='edit-course/:courseId' element={<AddCourse />}></Route>
           
         </Route>
         <Route path='/verify' element={<VerifyPayment />}></Route>

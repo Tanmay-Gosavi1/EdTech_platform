@@ -7,6 +7,16 @@ const LectureSchema= new mongoose.Schema({
     lectureUrl: {type: String,required: true, default: ""},
     isPreviewFree: {type: Boolean, required: true, default: false},
     lectureOrder: {type: Number, required: true},
+    transcript: [{
+        text: {type: String, default: ''},
+        start: {type: Number, default: 0},
+        duration: {type: Number, default: 0},
+    }],
+    transcriptText: {type: String, default: ''},
+    transcriptSegments: {type: Number, default: 0},
+    transcriptLanguage: {type: String, default: ''},
+    transcriptLanguageCode: {type: String, default: ''},
+    transcriptVideoId: {type: String, default: ''},
 },{_id: false});
 
 

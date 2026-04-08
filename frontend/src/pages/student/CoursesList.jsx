@@ -30,7 +30,7 @@ const CoursesList = () => {
     <>  
       <div className='min-h-screen'>
         <div className='theme-surface-soft py-8 px-4 sm:px-6 lg:px-8'>
-          <div className='max-w-7xl mx-auto flex items-center justify-between gap-8'>
+          <div className='max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8'>
             <div className='shrink-0'>
               <h1 className='theme-section-title text-3xl sm:text-4xl font-bold mb-3'>Course List</h1>
               <p className='text-sm text-slate-600'>
@@ -44,9 +44,11 @@ const CoursesList = () => {
         </div>
 
         {
-          input && <div className='inline-flex items-center gap-4 px-4 py-2 -mb-8 text-slate-600'>
-            <p>{input}</p>
-            <img src={assets.cross_icon} alt="" className='cursor-pointer' onClick={()=> navigate('/course-list')}/>
+          input && <div className='w-full mx-auto gap-4 px-4 py-2 -mb-8 text-slate-600'>
+            <div className='flex items-center w-full gap-2 justify-center' >
+              <p className='text-md font-medium capitalize'>{input}</p>
+              <img src={assets.cross_icon} alt="" className='cursor-pointer' onClick={()=> navigate('/course-list')}/>
+            </div>
           </div>
         }
 

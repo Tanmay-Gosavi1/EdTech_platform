@@ -50,16 +50,36 @@ const askCourseDoubt = async (req, res) => {
             ? course.courseContent.slice(0, 20).map((chapter) => chapter.chapterTitle).filter(Boolean)
             : [];
 
+        const lectureTranscriptSnippets = [];
+        if (Array.isArray(course.courseContent)) {
+            for (const chapter of course.courseContent.slice(0, 20)) {
+                const lectures = Array.isArray(chapter?.chapterContent) ? chapter.chapterContent : [];
+                for (const lecture of lectures.slice(0, 10)) {
+                    const transcriptText = String(lecture?.transcriptText || '').trim();
+                    if (transcriptText) {
+                        lectureTranscriptSnippets.push(
+                            `${lecture.lectureTitle || 'Lecture'}: ${transcriptText.slice(0, 900)}`
+                        );
+                    }
+                }
+            }
+        }
+
+        const transcriptContext = lectureTranscriptSnippets
+            .join('\n\n')
+            .slice(0, 6000);
+
         const model = geminiClient.getGenerativeModel({ model: 'gemini-3.1-flash-lite-preview' });
 
         const contextualPrompt = [
             'You are an EdTech teaching assistant inside the Educaso platform.',
-            'Keep answers concise, practical, and easy to understand for students.',
+            'Keep answers easy to understand for students.',
             'Use bullet points when useful. If code is needed, provide short runnable examples.',
             `Student Name: ${user.name || 'Student'}`,
             `Course Title: ${course.courseTitle}`,
             `Course Description: ${String(course.courseDescription || '').replace(/<[^>]*>/g, ' ').slice(0, 1500)}`,
             `Course Chapters: ${chapterTitles.join(', ') || 'N/A'}`,
+            `Lecture Transcript Context: ${transcriptContext || 'if Transcript not available for lectures then give a response based on course content.'}`,
             `Student Doubt: ${prompt.trim()}`,
         ].join('\n\n');
 

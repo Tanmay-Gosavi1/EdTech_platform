@@ -4,6 +4,9 @@ Educaso is a modern learning platform where students can discover and enroll in 
 
 ## What You Can Do In Educaso
 
+### Deployed URL : https://educaso-client.onrender.com
+
+
 ### Student Experience
 - Create account and log in securely with JWT authentication.
 - Explore published courses with pricing, discount, and rating information.

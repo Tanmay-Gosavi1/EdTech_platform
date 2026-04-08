@@ -1,6 +1,9 @@
 jest.mock('../../models/User.js');
 jest.mock('../../models/Course.js');
 jest.mock('../../models/Purchase.js');
+jest.mock('../../utils/youtubeTranscript.js', () => ({
+  enrichCourseContentWithTranscripts: jest.fn(async (courseContent) => courseContent)
+}));
 jest.mock('../../configs/cloudinary.js', () => ({
   cloudinary: {
     uploader: {

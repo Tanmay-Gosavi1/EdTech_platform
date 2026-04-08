@@ -2,6 +2,7 @@ const User= require('../models/User.js');
 const Course= require('../models/Course.js');
 const Purchase = require('../models/Purchase.js');
 const {cloudinary} = require('../configs/cloudinary.js');
+const { enrichCourseContentWithTranscripts } = require('../utils/youtubeTranscript.js');
 
 // Update user role to educator
 
@@ -53,6 +54,9 @@ const addCourse= async (req, res)=>{
         }
         const parsedCourseData= JSON.parse(courseData);
         parsedCourseData.educator= req.userId;
+        if (Array.isArray(parsedCourseData.courseContent)) {
+            parsedCourseData.courseContent = await enrichCourseContentWithTranscripts(parsedCourseData.courseContent);
+        }
         
         const imageUpload= await cloudinary.uploader.upload(imageFile.path);
         parsedCourseData.courseThumbnail= imageUpload.secure_url;
@@ -66,6 +70,67 @@ const addCourse= async (req, res)=>{
         return res.status(500).json({success: false, message: "Server error adding new course"});
     }
 }
+
+const getEducatorCourseById = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const educator = req.userId;
+
+        const course = await Course.findOne({ _id: courseId, educator });
+        if (!course) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+
+        return res.status(200).json({ success: true, course, message: 'Course fetched successfully' });
+    } catch (error) {
+        console.log('Error getting educator course by id:', error);
+        return res.status(500).json({ success: false, message: 'Server error getting educator course' });
+    }
+};
+
+const updateCourse = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const educator = req.userId;
+        const { courseData } = req.body;
+        const imageFile = req.file;
+
+        const existingCourse = await Course.findOne({ _id: courseId, educator });
+        if (!existingCourse) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+
+        if (!courseData) {
+            return res.status(400).json({ success: false, message: 'courseData is required' });
+        }
+
+        const parsedCourseData = JSON.parse(courseData);
+        parsedCourseData.educator = educator;
+        if (Array.isArray(parsedCourseData.courseContent)) {
+            parsedCourseData.courseContent = await enrichCourseContentWithTranscripts(parsedCourseData.courseContent);
+        }
+
+        if (imageFile) {
+            const imageUpload = await cloudinary.uploader.upload(imageFile.path);
+            parsedCourseData.courseThumbnail = imageUpload.secure_url;
+        } else {
+            parsedCourseData.courseThumbnail = existingCourse.courseThumbnail;
+        }
+
+        await Course.updateOne(
+            { _id: courseId, educator },
+            { $set: parsedCourseData },
+            { runValidators: true }
+        );
+
+        const updatedCourse = await Course.findById(courseId);
+
+        return res.status(200).json({ success: true, message: 'Course updated successfully', course: updatedCourse });
+    } catch (error) {
+        console.log('Error updating course:', error);
+        return res.status(500).json({ success: false, message: 'Server error updating course' });
+    }
+};
 
 // get Educator Courses
 const getEducatorCourses= async (req, res)=>{
@@ -164,4 +229,13 @@ const getEnrolledStudentsData= async (req, res)=>{
         return res.status(500).json({success: false, message: "Server error getting enrolled students data"});
     }
 }
-module.exports= {updateRoleToEducator,   addCourse, getEducatorCourses, educatorDashboardData, getEnrolledStudentsData, deleteCourse};
+module.exports= {
+    updateRoleToEducator,
+    addCourse,
+    getEducatorCourses,
+    getEducatorCourseById,
+    updateCourse,
+    educatorDashboardData,
+    getEnrolledStudentsData,
+    deleteCourse,
+};

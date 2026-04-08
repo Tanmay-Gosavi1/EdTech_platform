@@ -4,10 +4,12 @@ import Loading from '../../components/student/Loading.jsx';
 import Modal from '../../components/common/Modal.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const MyCourse = () => {
 
   const { formatCurrency, backendUrl, isEducator, token }= useContext(AppContext);
+  const navigate = useNavigate();
 
   const [courses, setCourses]= useState(null);
   const [courseToDelete, setCourseToDelete] = useState(null);
@@ -130,14 +132,23 @@ const MyCourse = () => {
                       </td>
 
                       <td className='px-4 sm:px-6 py-4 sm:py-5'>
-                        <button
-                          type='button'
-                          onClick={() => setCourseToDelete(course)}
-                          disabled={isDeleting}
-                          className='rounded-lg border border-red-200 px-3 py-2 text-xs sm:text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60'
-                        >
-                          Delete
-                        </button>
+                        <div className='flex items-center gap-2'>
+                          <button
+                            type='button'
+                            onClick={() => navigate(`/educator/edit-course/${course._id}`)}
+                            className='rounded-lg border border-sky-200 px-3 py-2 text-xs sm:text-sm font-semibold text-sky-600 transition hover:bg-sky-50'
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type='button'
+                            onClick={() => setCourseToDelete(course)}
+                            disabled={isDeleting}
+                            className='rounded-lg border border-red-200 px-3 py-2 text-xs sm:text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60'
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
